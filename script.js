@@ -16,13 +16,13 @@
 
     cacheDOM () {
       this.form = document.querySelector('form');
-      this.input = this.form.querySelector('[name=task]');
+      this.input = document.getElementById('text-input');
       this.list = document.getElementById('todo-list');
-      this.item = this.list.querySelectorAll('.item');
+      this.item = this.list.getElementsByClassName('item');
       this.sortByName = document.getElementById('sort-by-name');
       this.sortByOrder = document.getElementById('sort-by-order');
-      this.deleteButtons = document.querySelectorAll('.remove-item');
-      this.items = document.querySelectorAll('.item');
+      this.deleteButtons = document.getElementsByClassName('remove-item');
+      this.items = document.getElementsByClassName('item');
     },
 
     bindEvents () {
