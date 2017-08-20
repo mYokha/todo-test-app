@@ -2,13 +2,10 @@
   "name": "todo-test-app",
   "version": "1.0.0",
   "description": "This app is a simple page with possibility to add, to remove, to sort tasks.\r It uses flexbox styles.\r List of tasks can be sorted by task number or by task name.\r After any changes in list of tasks, array is being logged in console.",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "homepage": "https://mYokha.github.io/todo-test-app",
   "author": "max yokha",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^4.4.1",
-    "gh-pages": "^1.0.0"
+    "eslint": "^4.4.1"
   }
 }
