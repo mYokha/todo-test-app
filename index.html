@@ -7,24 +7,23 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body class="df ai-c fd-c">
-    <header id="header">
+    <header>
       <h1>TODO App</h1>
     </header>
-    <main id="main">
+    <main>
       <section id="input-field">
-        <form action="" class="df">
+        <form class="df">
           <input type="text" name="task" placeholder="Input your tasks here">
-          <button type="submit" name="add">Add a task</button>
+          <button type="submit">Add a task</button>
         </form>
       </section>
-      <section id="todo-list">
-      </section>
+      <section id="todo-list"></section>
       <section id="sorting">
-      <button type="button" name="sort-by-name">Sort by name</button>
-      <button type="button" name="sort-by-order">Sort by order</button>
+        <button type="button" id="sort-by-name">Sort by name</button>
+        <button type="button" id="sort-by-order">Sort by order</button>
       </section>
     </main>
-    <footer id="footer">
+    <footer>
       <p>
         You can add a task by typing it in an input field
         and clicking Enter or Add a task button.
@@ -34,8 +33,6 @@
         buttons underneath the list for that.
       </p>
     </footer>
-    <script src="script.js">
-
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>
