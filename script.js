@@ -30,34 +30,15 @@
       this.sortByOrder.addEventListener('click', () => this.sortById());
       this.sortByName.addEventListener('click', () => this.sortByValue());
 
-      this.list.addEventListener('click',(e)=>{
-        if(!e.target.matches('input')) return;
-        console.log(e.target);
-        this.toggleDone();
-      });
-
-      this.list.addEventListener('click',(e)=>{
-        if(!e.target.className === 'remove-item') return;
+      this.list.addEventListener('click',(e) => {
+        if(!e.target.classList.contains('remove-item')) return;
         this.deleteTask(parseInt(e.target.parentElement.dataset.id, 10));
       });
-      /*
-      this.list.addEventListener('click', function(e) {
-        if (event.target.className.toLowerCase() === 'remove-item'){
-          this.deleteTask(e);
-          console.log('click!!!');
-        }
-      });*/
-      //this.list.addEventListener('click', (e) => this.deleteTask(e));
-      /*
-      this.items.forEach(item => {
-        item.addEventListener('click', e => {
-          if (event.target.className.toLowerCase() === 'remove-item'){
-            this.deleteTask(e);
-            console.log('click!!!');
-          }
-        }
-        );
-      });*/
+
+      this.list.addEventListener('click',(e) => {
+        if(!e.target.matches('input')) return;
+        this.toggleDone(parseInt(e.target.parentElement.parentElement.dataset.id, 10));
+      });
     },
 
     addTask () {
@@ -79,9 +60,7 @@
     },
 
     deleteTask (id) {
-      console.table(this.tasks);
       this.tasks = this.tasks.filter(task => task.id !== id);
-
 
       this.order = 1;
       this.tasks.forEach(task => {
@@ -92,9 +71,15 @@
       this.render();
     },
 
-    toggleDone () {
-      console.log('triggered');
-      //this.render();
+    toggleDone (id) {
+      this.tasks = this.tasks.map(task => {
+        if (task.id === id) {
+          task.checked = !task.checked;
+        }
+        return task;
+      });
+
+      this.render();
     },
 
     sortById () {
@@ -118,7 +103,7 @@
             <input type="checkbox" ${item.checked ? 'checked' : ''}>
           </div>
           <div class="item-value">
-            <span class="id">${item.id}.</span>${item.value}
+            <span class="item-id">${item.id}.</span><span${item.checked ? ' class="item-checked"' : ''}>${item.value}</span>
           </div>
           <div class="remove-item">
             ✕

@@ -47,16 +47,19 @@ h1 {
   flex-grow: 3;
 }
 
-.id {
+.item-id {
   font-weight: 700;
   margin-right: 20px;
+}
+.item-checked {
+  text-decoration: line-through;
 }
 
 #todo-list {
   overflow: auto;
   margin: 20px 0;
   width: 100%;
-  max-height: calc(100vh - 18em);
+  max-height: calc(100vh - 20em);
 }
 
 input, button {
@@ -89,8 +92,8 @@ button:active {
 .remove-item, .checkbox{
   display: flex;
   background-color: rgba(0, 0, 0, 0.1);
-  margin: 20px;
-  padding: 10px;
+  margin: 10px;
+  padding: 15px;
   line-height: 0.9em;
   transition: 0.1s;
   font-size: 1.8em;
@@ -118,7 +121,7 @@ button[name="sort-by-name"] {
 
 
 #footer {
-  margin-top: 50px;
+  margin-top: 20px;
   font-size: 0.75em;
   color: #555;
 }
