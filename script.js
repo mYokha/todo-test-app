@@ -1,82 +1,60 @@
 (function () {
-  let app = {
-    tasks: [],
 
-    init () {
-      if (localStorage.getItem('tasks')) {
-        this.tasks = JSON.parse(localStorage.getItem('tasks'));
-      }
-      const amount = this.tasks.length;
-      this.order = amount ? amount + 1 : 1;
+  // Cache DOM
+  const form = document.querySelector('form');
+  const input = document.getElementById('text-input');
+  const list = document.getElementById('todo-list');
+  const sortByNameButton = document.getElementById('sort-by-name');
+  const sortByDateButton = document.getElementById('sort-by-date');
 
-      this.cacheDOM();
-      this.bindEvents();
-      this.render();
-    },
+  // Application
+  const app = (function () {
+    let tasks = [];
 
-    cacheDOM () {
-      this.form = document.querySelector('form');
-      this.input = document.getElementById('text-input');
-      this.list = document.getElementById('todo-list');
-      this.item = this.list.getElementsByClassName('item');
-      this.sortByName = document.getElementById('sort-by-name');
-      this.sortByOrder = document.getElementById('sort-by-order');
-      this.deleteButtons = document.getElementsByClassName('remove-item');
-      this.items = document.getElementsByClassName('item');
-    },
+    // Initialize
+    if (localStorage.getItem('tasks')) {
+      tasks = JSON.parse(localStorage.getItem('tasks'));
+    }
 
-    bindEvents () {
-      this.form.addEventListener('submit', e => {
-        e.preventDefault();
-        this.addTask();
+    function render () {
+      let data = {
+        tasks,
+        html: ''
+      };
+
+      data.tasks.forEach((task, index) => {
+        data.html += templateItem(task, index);
       });
 
-      this.sortByOrder.addEventListener('click', () => this.sortById());
-      this.sortByName.addEventListener('click', () => this.sortByValue());
+      list.innerHTML = data.html;
 
-      this.list.addEventListener('click', e => {
-        if (!e.target.classList.contains('remove-item')) return;
-        const taskId = parseInt(e.target.parentElement.dataset.id, 10);
-        this.deleteTask(taskId);
-      });
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
 
-      this.list.addEventListener('click', e => {
-        if (!e.target.matches('input')) return;
-        const taskId = parseInt(e.target.parentElement.parentElement.dataset.id, 10);
-        this.toggleDone(taskId);
-      });
-    },
+    render();
 
-    addTask () {
-      if (this.input.value.length) {
-        this.tasks.push({
-          id: this.order,
-          value: this.input.value,
+    function addTask (value) {
+      if (value) {
+        tasks.push({
+          id: Date.now(),
+          value,
           checked: false
         });
-
-        this.form.reset();
-        this.order++;
-        this.render();
+        form.reset();
+        render();
       } else {
         alert('You\'ve tried to enter an empty value!');
       }
-    },
+    }
 
-    deleteTask (id) {
-      this.tasks = this.tasks.filter(task => task.id !== id);
+    function deleteTask (id) {
+      tasks = tasks.filter(task => task.id !== id);
 
-      this.order = 1;
-      this.tasks.forEach(task => {
-        task.id = this.order;
-        this.order++;
-      });
+      render();
+    }
 
-      this.render();
-    },
-
-    toggleDone (id) {
-      this.tasks = this.tasks.map(task => {
+    function toggleDone (id) {
+      tasks = tasks.map(task => {
         if (task.id === id) {
           task.checked = !task.checked;
         }
@@ -84,50 +62,68 @@
         return task;
       });
 
-      this.render();
-    },
+      render();
+    }
 
-    sortById () {
-      this.tasks = this.tasks.sort((a, b) => a.id - b.id);
-      this.render();
-    },
+    function sortByDate () {
+      tasks = tasks.sort((a, b) => a.id - b.id);
+      render();
+    }
 
-    sortByValue () {
-      this.tasks = this.tasks.sort((a, b) => a.value > b.value);
-      this.render();
-    },
+    function sortByValue () {
+      tasks = tasks.sort((a, b) => a.value > b.value);
+      render();
+    }
 
-    templateItem (item) {
+    function templateItem (item, i) {
       return `
         <div class="item df" data-id="${item.id}">
-          <div class="df checkbox">
-            <input type="checkbox" ${item.checked ? 'checked' : ''}>
+          <div class="creation-date df">${new Date(item.id)}</div>
+          <div class="df item-inner-content">
+            <div class="df checkbox">
+              <input type="checkbox" ${item.checked ? 'checked' : ''}>
+            </div>
+            <div class="item-value df">
+              <span class="item-order">${i + 1}.</span><span class="${item.checked ? ' item-checked"' : '"'}>${item.value}</span>
+            </div>
+            <div class="remove-item">✕</div>
           </div>
-          <div class="item-value">
-            <span class="item-id">${item.id}.</span><span${item.checked ? ' class="item-checked"' : ''}>${item.value}</span>
-          </div>
-          <div class="remove-item">✕</div>
         </div>
       `;
-    },
-
-    render () {
-      let data = {
-        tasks: this.tasks,
-        html: ''
-      };
-
-      data.tasks.forEach(task => {
-        data.html += this.templateItem(task);
-      });
-
-      this.list.innerHTML = data.html;
-
-      localStorage.setItem('tasks', JSON.stringify(this.tasks));
-
-      console.table(this.tasks);
     }
-  };
 
-  app.init();
+    return {
+      addTask,
+      deleteTask,
+      sortByDate,
+      sortByValue,
+      toggleDone
+    };
+  })();
+
+  // Handle events
+  function handleSubmit (e) {
+    e.preventDefault();
+    app.addTask(input.value);
+  }
+
+  function handleDeletion (e) {
+    if (!e.target.classList.contains('remove-item')) return;
+    const taskId = parseInt(e.target.parentElement.parentElement.dataset.id, 10);
+    app.deleteTask(taskId);
+  }
+
+  function handleDone (e) {
+    if (!e.target.matches('input')) return;
+    const taskId = parseInt(e.target.parentElement.parentElement.parentElement.dataset.id, 10);
+
+    app.toggleDone(taskId);
+  }
+
+  // Bind events
+  form.addEventListener('submit', handleSubmit);
+  list.addEventListener('click', handleDeletion);
+  list.addEventListener('click', handleDone);
+  sortByDateButton.addEventListener('click', app.sortByDate);
+  sortByNameButton.addEventListener('click', app.sortByValue);
 })();

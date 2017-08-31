@@ -1,3 +1,5 @@
+/*flex: none | [ <'flex-grow'> <'flex-shrink'>? || <'flex-basis'> ]*/
+
 *, input, button {
   font-family: 'Open Sans', sans-serif;
   box-sizing: border-box;
@@ -23,25 +25,39 @@ main {
 
 .item {
   background-color: rgba(0, 0, 0, 0.05);
-  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
   margin-bottom: 5px;
 
-  flex-direction: row;
-  justify-content: space-between;
+  flex-direction: column;
+  /*justify-content: space-between;*/
   align-items: center;
-
   transition: 0.1s;
 }
 
 .item:hover {
-  background-color: rgba(0, 0, 0, 0.08);
+  background-color: rgba(0, 0, 0, 0.01);
 }
 
 .item-value {
   flex-grow: 3;
+  align-items: center;
 }
 
-.item-id {
+.creation-date {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 5px;
+  font-size: 0.7em;
+  color: #fff;
+  align-self: stretch;
+}
+
+.item-inner-content {
+  flex-direction: row;
+  justify-content: space-between;
+  align-self: stretch;
+}
+
+.item-order {
   font-weight: 700;
   margin-right: 20px;
 }
