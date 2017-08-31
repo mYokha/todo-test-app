@@ -1,143 +1,129 @@
-let app = (function () {
-  let tasks = [];
-  let oreder;
+(function () {
 
-  //initialize
-  if (localStorage.getItem('tasks')) {
-    tasks = JSON.parse(localStorage.getItem('tasks'));
-  }
-  const amount = tasks.length;
-  order = amount ? amount + 1 : 1;
-
-  //cache DOM
+  // Cache DOM
   const form = document.querySelector('form');
   const input = document.getElementById('text-input');
   const list = document.getElementById('todo-list');
-  const item = list.getElementsByClassName('item');
-  const sortByName = document.getElementById('sort-by-name');
-  const sortByOrder = document.getElementById('sort-by-order');
-  const deleteButtons = document.getElementsByClassName('remove-item');
-  const items = document.getElementsByClassName('item');
+  const sortByNameButton = document.getElementById('sort-by-name');
+  const sortByDateButton = document.getElementById('sort-by-date');
 
-  //bind events
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    addTask();
-  });
+  // Application
+  const app = (function () {
+    let tasks = [];
 
-  //let's finally render this thing
-  render();
+    // Initialize
+    if (localStorage.getItem('tasks')) {
+      tasks = JSON.parse(localStorage.getItem('tasks'));
+    }
 
-  sortByOrder.addEventListener('click', () => sortById());
-  sortByName.addEventListener('click', () => sortByValue());
+    function render () {
+      let data = {
+        tasks,
+        html: ''
+      };
 
-  list.addEventListener('click', e => {
-    if (!e.target.classList.contains('remove-item')) return;
-    const taskId = parseInt(e.target.parentElement.dataset.id, 10);
-    deleteTask(taskId);
-  });
-
-  list.addEventListener('click', e => {
-    if (!e.target.matches('input')) return;
-    const taskId = parseInt(e.target.parentElement.parentElement.dataset.id, 10);
-    toggleDone(taskId);
-  });
-
-  function addTask (value = input.value) {
-    if (value) {
-      tasks.push({
-        id: order,
-        value,
-        checked: false
+      data.tasks.forEach((task, index) => {
+        data.html += templateItem(task, index);
       });
 
-      form.reset();
-      order++;
-      render();
-    } else {
-      alert(`You've tried to enter an empty value!`);
-    }
-  };
+      list.innerHTML = data.html;
 
-  function deleteTask (id) {
-    if (!(/^[1-9]\d*$/.test(id))){
-      alert (`Must be positive integers only!`);
-      return;
+      localStorage.setItem('tasks', JSON.stringify(tasks));
     }
-    if (id > tasks.length) {
-        alert(`No task with this id!`);
-        return;
-    }
-
-    tasks = tasks.filter(task => task.id !== id);
-
-    order = 1;
-    tasks.forEach(task => {
-      id = order;
-      order++;
-    });
 
     render();
-  };
 
-  function toggleDone (id) {
-    tasks = tasks.map(task => {
-      if (task.id === id) {
-        task.checked = !task.checked;
+    function addTask (value) {
+      if (value) {
+        tasks.push({
+          id: Date.now(),
+          value,
+          checked: false
+        });
+        form.reset();
+        render();
+      } else {
+        alert('You\'ve tried to enter an empty value!');
       }
+    }
 
-      return task;
-    });
+    function deleteTask (id) {
+      tasks = tasks.filter(task => task.id !== id);
 
-    render();
-  };
+      render();
+    }
 
-  function sortById () {
-    tasks = tasks.sort((a, b) => a.id - b.id);
-    render();
-  };
+    function toggleDone (id) {
+      tasks = tasks.map(task => {
+        if (task.id === id) {
+          task.checked = !task.checked;
+        }
 
-  function sortByValue () {
-    tasks = tasks.sort((a, b) => a.value > b.value);
-    render();
-  };
+        return task;
+      });
 
-  function templateItem (item) {
-    return `
-      <div class="item df" data-id="${item.id}">
-        <div class="df checkbox">
-          <input type="checkbox" ${item.checked ? 'checked' : ''}>
+      render();
+    }
+
+    function sortByDate () {
+      tasks = tasks.sort((a, b) => a.id - b.id);
+      render();
+    }
+
+    function sortByValue () {
+      tasks = tasks.sort((a, b) => a.value > b.value);
+      render();
+    }
+
+    function templateItem (item, i) {
+      return `
+        <div class="item df" data-id="${item.id}">
+          <div class="creation-date df">${new Date(item.id)}</div>
+          <div class="df item-inner-content">
+            <div class="df checkbox">
+              <input type="checkbox" ${item.checked ? 'checked' : ''}>
+            </div>
+            <div class="item-value df">
+              <span class="item-order">${i + 1}.</span><span class="${item.checked ? ' item-checked"' : '"'}>${item.value}</span>
+            </div>
+            <div class="remove-item">✕</div>
+          </div>
         </div>
-        <div class="item-value">
-          <span class="item-id">${item.id}.</span><span${item.checked ? ' class="item-checked"' : ''}>${item.value}</span>
-        </div>
-        <div class="remove-item">✕</div>
-      </div>
-    `;
-  };
+      `;
+    }
 
-  function render () {
-    let data = {
-      tasks,
-      html: ''
+    return {
+      addTask,
+      deleteTask,
+      sortByDate,
+      sortByValue,
+      toggleDone
     };
+  })();
 
-    data.tasks.forEach(task => {
-      data.html += templateItem(task);
-    });
+  // Handle events
+  function handleSubmit (e) {
+    e.preventDefault();
+    app.addTask(input.value);
+  }
 
-    list.innerHTML = data.html;
+  function handleDeletion (e) {
+    if (!e.target.classList.contains('remove-item')) return;
+    const taskId = parseInt(e.target.parentElement.parentElement.dataset.id, 10);
+    app.deleteTask(taskId);
+  }
 
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+  function handleDone (e) {
+    if (!e.target.matches('input')) return;
+    const taskId = parseInt(e.target.parentElement.parentElement.parentElement.dataset.id, 10);
 
-    console.table(tasks);
-  };
+    app.toggleDone(taskId);
+  }
 
-  return {
-    addTask,
-    deleteTask,
-    sortById,
-    sortByValue
-  };
-
+  // Bind events
+  form.addEventListener('submit', handleSubmit);
+  list.addEventListener('click', handleDeletion);
+  list.addEventListener('click', handleDone);
+  sortByDateButton.addEventListener('click', app.sortByDate);
+  sortByNameButton.addEventListener('click', app.sortByValue);
 })();
