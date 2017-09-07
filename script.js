@@ -7,6 +7,10 @@
   const sortByNameButton = document.getElementById('sort-by-name');
   const sortByDateButton = document.getElementById('sort-by-date');
 
+  const allTasksElem = document.getElementById('all-tasks');
+  const activeTasksElem = document.getElementById('active-tasks');
+  const doneTasksElem = document.getElementById('done-tasks');
+
   // Application
   const app = (function () {
     let tasks = [];
@@ -27,6 +31,11 @@
       });
 
       list.innerHTML = data.html;
+
+      const counter = tasksCounter();
+      allTasksElem.innerHTML = counter.general;
+      activeTasksElem.innerHTML = counter.active;
+      doneTasksElem.innerHTML = counter.done;
 
       localStorage.setItem('tasks', JSON.stringify(tasks));
     }
@@ -73,6 +82,25 @@
     function sortByValue () {
       tasks = tasks.sort((a, b) => a.value > b.value);
       render();
+    }
+
+    function tasksCounter (){
+      let count = {
+        general: 0,
+        done: 0,
+        active: 0
+      };
+
+      tasks.forEach(task => {
+        count.general ++;
+        if (task.checked){
+          count.done ++;
+        } else {
+          count.active ++;
+        }
+      });
+
+      return count;
     }
 
     function templateItem (item, i) {
