@@ -71,7 +71,7 @@ main {
   overflow: auto;
   margin: 20px 0;
   width: 100%;
-  max-height: calc(100vh - 22.5em);
+  max-height: calc(100vh - 25em);
 }
 
 #text-input {
@@ -127,15 +127,15 @@ input[type="checkbox"] {
   background-color: rgba(0, 0, 0, 0.7);
 }
 
-#counter {
+#counters {
   flex-direction: column;
 }
 
-.count {
+.counter-value {
   font-weight: 700;
 }
 
-footer, #counter {
+footer, #counters {
   margin-top: 20px;
   font-size: 0.8em;
   color: #555;

@@ -23,18 +23,23 @@
         <button type="button" id="sort-by-name">Sort by value</button>
         <button type="button" id="sort-by-date">Sort by date</button>
       </section>
-      <section id="counter" class="df">
-        <div>Number of tasks: <span id="all-tasks" class="count"></span></div>
-        <div>Tasks to do: <span id="active-tasks" class="count"></span></div>
-        <div>Tasks done: <span id="done-tasks" class="count"></span></div>
+      <section id="counters" class="df">
+        <div>All tasks: <span id="all-tasks" class="counter-value"></span></div>
+        <div>Active tasks: <span id="active-tasks" class="counter-value"></span></div>
+        <div>Done tasks: <span id="done-tasks" class="counter-value"></span></div>
       </section>
     </main>
     <footer>
-      <div>You can add a task by typing it in an input field
-        and clicking Enter or Add a task button.</div>
-      <div>You can sort tasks by name or by order. Use sorting
-        buttons underneath the list for that.</div>
+      <p>
+        You can add a task by typing it in an input field
+        and clicking Enter or Add a task button.
+      </p>
+      <p>
+        You can sort tasks by name or by order. Use sorting
+        buttons underneath the list for that.
+      </p>
     </footer>
-    <script src="script.js"></script>
+    <script src="counter.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>
