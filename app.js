@@ -25,7 +25,9 @@ const app = (function () {
     });
     list.innerHTML = data.html;
 
-    counter.setCounter(tasks);
+    //counter.setCounter(tasks);
+    events.emit('tasksChanged', tasks);
+
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }
 

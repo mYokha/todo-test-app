@@ -11,6 +11,8 @@ const counter = (function (){
   const activeTasksElem = document.getElementById('active-tasks');
   const doneTasksElem = document.getElementById('done-tasks');
 
+  events.on('tasksChanged', setCounter);
+
   function render () {
     allTasksElem.innerHTML = count.general;
     activeTasksElem.innerHTML = count.active;
@@ -32,8 +34,4 @@ const counter = (function (){
     render ();
     return count;
   }
-
-  return {
-    setCounter: setCounter
-  };
 })();
