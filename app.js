@@ -15,17 +15,13 @@ const app = (function () {
   }
 
   function render () {
-    let data = {
-      tasks,
-      html: ''
-    };
+    let html = '';
 
-    data.tasks.forEach((task, index) => {
-      data.html += templateItem(task, index);
+    tasks.forEach((task, index) => {
+      html += templateItem(task, index);
     });
-    list.innerHTML = data.html;
+    list.innerHTML = html;
 
-    //counter.setCounter(tasks);
     events.emit('tasksChanged', tasks);
 
     localStorage.setItem('tasks', JSON.stringify(tasks));
@@ -123,7 +119,6 @@ const app = (function () {
     deleteTask,
     sortByDate,
     sortByValue,
-    toggleDone,
-    tasks
+    toggleDone
   };
 })();

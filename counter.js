@@ -1,10 +1,6 @@
 // Counter component
 const counter = (function (){
-  let count = {
-    general: 0,
-    done: 0,
-    active: 0
-  };
+  let count = {};
 
   // Cache DOM
   const allTasksElem = document.getElementById('all-tasks');
@@ -25,10 +21,10 @@ const counter = (function (){
     count.active = 0;
 
     newTasks.forEach(task => {
-      if (task.checked){
-        count.done ++;
+      if (task.checked) {
+        count.done++;
       } else {
-        count.active ++;
+        count.active++;
       }
     });
     render ();
