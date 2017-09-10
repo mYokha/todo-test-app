@@ -23,6 +23,11 @@
         <button type="button" id="sort-by-name">Sort by value</button>
         <button type="button" id="sort-by-date">Sort by date</button>
       </section>
+      <section id="counters" class="df">
+        <div>All tasks: <span id="all-tasks" class="counter-value"></span></div>
+        <div>Active tasks: <span id="active-tasks" class="counter-value"></span></div>
+        <div>Done tasks: <span id="done-tasks" class="counter-value"></span></div>
+      </section>
     </main>
     <footer>
       <p>
@@ -34,6 +39,8 @@
         buttons underneath the list for that.
       </p>
     </footer>
-    <script src="script.js"></script>
+    <script src="pubsub.js"></script>
+    <script src="counter.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>
